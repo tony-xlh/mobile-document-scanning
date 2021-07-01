@@ -173,6 +173,8 @@
 		
         // Connect to the remote DWT service
         function initRemoteDWT(ip) {
+            Dynamsoft.DWT.DeleteDWTObject("remoteScan");
+            DWObjectRemote = null;
             var dwtConfig = {
 			  WebTwainId:"remoteScan",
 			  Host: ip, 
