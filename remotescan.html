@@ -115,7 +115,7 @@
     </div>
     <script type="text/javascript">
         var ip = document.getElementById('remote');
-        ip.options.add(new Option(window.location.hostname,window.location.hostname))
+        ip.options.add(new Option(window.location.hostname,window.location.hostname));
         ip.onchange = function () {
             initRemoteDWT(ip.value);
         }
@@ -199,9 +199,7 @@
             var remoteSelect = document.getElementById('remotesource');
             dwt.GetSourceNamesAsync().then(function (result) {
                 // Remove previous options
-                for (var i = 0; i < remoteSelect.length; i++) {
-                    remoteSelect.remove(i);
-                }
+                remoteSelect.innerHTML="";
 
                 for (var i = 0; i < result.length; i++)
                     remoteSelect.options.add(new Option(result[i], i));
