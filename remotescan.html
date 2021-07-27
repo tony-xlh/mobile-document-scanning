@@ -25,6 +25,7 @@
                 <button class="tablinks" onclick="switchTab(event, 'scan')">Scan</button>                
                 <button class="tablinks" onclick="switchTab(event, 'local')">Local</button>
                 <button class="tablinks" onclick="switchTab(event, 'save')">Save</button>
+                <button class="tablinks" onclick="switchTab(event, 'upload')">Upload</button>
                 <button class="tablinks" onclick="switchTab(event, 'move')">Move</button>
                 <button class="tablinks" onclick="switchTab(event, 'remove')">Remove</button>
                 <button class="tablinks" onclick="switchTab(event, 'view')">View</button>
@@ -67,6 +68,7 @@
                             <option value="150">150</option>
                             <option value="200">200</option>
                             <option value="300">300</option>
+                            <option value="600">600</option>
                         </select>
                     </div>
                     <div>
@@ -93,6 +95,10 @@
                             <input type="radio" value="pdf" name="ImageType" id="imgTypepdf" checked="checked" />PDF</label>
                     </div>
                 </div>
+                <div id="upload"  class="tabcontent">
+                    <input onclick="Upload();" type="button" value="Upload Selected">
+                </div>
+               
                 <div id="move"  class="tabcontent">
                     <input onclick="MoveSelectedUp();" type="button" value="Move Selected Up" />
                     <input onclick="MoveSelectedDown();" type="button" value="Move Selected Down" />
@@ -386,7 +392,71 @@
             DWObject.Addon.PDF.SetConvertMode(Dynamsoft.DWT.EnumDWT_ConvertMode.CM_RENDERALL);
             DWObject.LoadImageEx("", Dynamsoft.DWT.EnumDWT_ImageType.IT_ALL, OnSuccess, OnFailure);
         }
-
+        
+        
+        function OnEmptyResponse() {
+            console.log('empty response');
+        }
+        function OnServerReturnedSomething(errorCode, errorString, sHttpResponse) {
+            console.log(errorString);
+            console.log(sHttpResponse);
+        	var response;
+        	try {
+        		response = JSON.parse(sHttpResponse);
+        	}
+        	catch(err) {
+        	    console.log(err);
+        	    return;
+        	}
+        	if (response.status=="success"){
+        		alert("Uploaded.")
+        	}else{
+        		alert("Failed.");
+        	}
+        }
+        /**
+         * Upload the images specified by their indices in the specified file type.
+         * @param indices Specify the images
+         * @param type Specify the file type
+         */
+        function Upload() {
+            var protocol = Dynamsoft.Lib.detect.ssl ? "https://" : "http://",
+                port = window.location.port === "" ? 80 : window.location.port,
+                actionPage = "/Upload";
+            // path to the server-side script
+            
+            var url = protocol + window.location.hostname + ":" + port + actionPage;
+            console.log(url);
+            var fileName = getFormattedDate() + ".jpg";
+            if (DWObject) {
+                DWObject.HTTPUpload(
+                    url,
+                    DWObject.SelectedImagesIndices,
+                    Dynamsoft.DWT.EnumDWT_ImageType.IT_JPG,
+                    Dynamsoft.DWT.EnumDWT_UploadDataFormat.Binary,
+                    fileName,
+                    OnEmptyResponse,
+                    OnServerReturnedSomething
+                );
+            }
+        }
+        
+        function getFormattedDate() {
+            var date = new Date();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+            month = (month < 10 ? "0" : "") + month;
+            day = (day < 10 ? "0" : "") + day;
+            hour = (hour < 10 ? "0" : "") + hour;
+            min = (min < 10 ? "0" : "") + min;
+            sec = (sec < 10 ? "0" : "") + sec;
+            var str = date.getFullYear().toString() + month + day + hour + min + sec;
+            return str;
+        }
+        
         function SaveWithFileDialog() {
             if (DWObject) {
                 if (DWObject.HowManyImagesInBuffer > 0) {
