@@ -9,6 +9,7 @@ This is a demo for Dynamic Web TWAIN, which is optimized for mobile devices.
 3. Run the https server: `$ python https.py`
 4. Connect your phone to the same network with the server. View the result at https://<ip-of-the-server>:8000/
 
+More samples are available here: <https://github.com/xulihang/dynamsoft-samples/tree/main/dwt>
 
 Published blog:
 
