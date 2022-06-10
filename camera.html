@@ -60,24 +60,26 @@
         
 
         function ScanDocuments() {
-            let cameraContainer = document.createElement("div");
-            cameraContainer.className = "fullscreen";
-            document.body.appendChild(cameraContainer);
-            function funcConfirmExit () {
-                cameraContainer.remove();
-                return true;
-            }
-            let scanOptions = {};
-            scanOptions.element = cameraContainer
-            scanOptions.scannerViewer = {funcConfirmExit: funcConfirmExit}
-            DWObject.Addon.Camera.scanDocument(scanOptions).then(
-                function(){
-                    console.log("OK");
-                }, 
-                function(error){
-                    console.log(error.message);
+            if (DWObject) {
+                let cameraContainer = document.createElement("div");
+                cameraContainer.className = "fullscreen";
+                document.body.appendChild(cameraContainer);
+                function funcConfirmExit () {
+                    cameraContainer.remove();
+                    return true;
                 }
-            );
+                let scanOptions = {};
+                scanOptions.element = cameraContainer
+                scanOptions.scannerViewer = {funcConfirmExit: funcConfirmExit}
+                DWObject.Addon.Camera.scanDocument(scanOptions).then(
+                    function(){
+                        console.log("OK");
+                    }, 
+                    function(error){
+                        console.log(error.message);
+                    }
+                );
+            }
         }
 
 
