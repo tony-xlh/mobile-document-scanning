@@ -25,9 +25,7 @@
             </div>
             <div style="height:calc(100% - 50px);overflow-y: auto;">
                 <div id="camera" class="tabcontent">
-                    <select id="camerasource"></select>
-                    <input id="captureButton" type="button" value="Capture Images" onclick="CaptureImages();" />
-                    <input id="switchButton" type="button" value="Hide Video" onclick="SwitchViews();" />
+                    <input id="scanDocumentButton" type="button" value="Scan Documents" onclick="ScanDocuments();" />
                 </div>
                 <div id="save"  class="tabcontent">
                     Default Filename: <input type="text" id="filename" value="DynamicWebTWAIN"/>
@@ -45,7 +43,7 @@
         </div>
     </div>
     <script type="text/javascript">
-        var console = window['console'] ? window['console'] : { 'log': function () { } };
+        Dynamsoft.DWT.UseLocalService = false;
         Dynamsoft.DWT.RegisterEvent('OnWebTwainReady', Dynamsoft_OnReady); // Register OnWebTwainReady event. This event fires as soon as Dynamic Web TWAIN is initialized and ready to be used
         var DWObject;
         switchTab(null, 'camera')
@@ -56,68 +54,21 @@
                 DWObject.Viewer.width="100%";
                 DWObject.Viewer.height="100%";
                 DWObject.SetViewMode(2, 2);
-   
-                SetIfWebcamPlayVideo(false);    
-                DWObject.Addon.Camera.getSourceList().then(function (sourceName) {
-                    var iCount = sourceName.length;
-                    for (var i = 0; i < iCount; i++) {
-                        document.getElementById("camerasource").options.add(new Option(sourceName[i].label, sourceName[i].deviceId));
-                    }
-                });
-                document.getElementById('camerasource').onchange = function () {
-                    var deviceId = document.getElementById("camerasource").options[document.getElementById("camerasource").selectedIndex].value;
-                    DWObject.Addon.Camera.selectSource(deviceId).then(function () {
-                        SetIfWebcamPlayVideo(true);
-                        document.getElementById("switchButton").style.display = '';
-                        document.getElementById("captureButton").disabled = "";
-                    }, function (ex) { console.log(ex.message); });
-                }
             }
         }
         
-        function CaptureImages() {
-            if (DWObject) {
-                DWObject.Addon.Camera.capture().then(function () {
-                    DWObject.Viewer.render();
-                    SetIfWebcamPlayVideo(false);
-                }, function (ex) {
-                    console.log(ex.message);
-                    SetIfWebcamPlayVideo(false);
-                });
-            }
+
+        function ScanDocuments() {
+            DWObject.Addon.Camera.scanDocument().then(
+                function(){
+                    console.log("OK");
+                }, 
+                function(error){
+                    console.log(error.message);
+                }
+            );
         }
 
-        function SetIfWebcamPlayVideo(bShow) {
-            if (bShow) {
-                DWObject.Addon.Camera.play(null, { width: 2560, height: 1440 },true).then(function (r) {
-                    isVideoOn = true;
-                    document.getElementById("captureButton").style.backgroundColor = "";
-                    document.getElementById("captureButton").disabled = "";
-                    document.getElementById("switchButton").value = "Hide Video";
-                }, function (ex) {
-                    console.log(ex.message);
-                    DWObject.Addon.Camera.stop();
-                });
-            }
-            else {
-                DWObject.Addon.Camera.stop();
-                isVideoOn = false;
-                document.getElementById("captureButton").style.backgroundColor = "#aaa";
-                document.getElementById("captureButton").disabled = "disabled";
-                document.getElementById("switchButton").value = "Show Video";
-
-            }
-        }
-
-        function SwitchViews() {
-            if (isVideoOn == false) {
-                // continue the video
-                SetIfWebcamPlayVideo(true);
-            } else {
-                // stop the video
-                SetIfWebcamPlayVideo(false);
-            }
-        }
 
         //Callback functions for async APIs
         function OnSuccess() {
