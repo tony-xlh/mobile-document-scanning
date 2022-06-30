@@ -23,12 +23,13 @@
             <div class="tab" style="display:flex;overflow-x:auto;height:50px;">
                 <button class="tablinks" onclick="switchTab(event, 'camera')">Camera</button>
                 <button class="tablinks" onclick="switchTab(event, 'save')">Save</button>
+                <button class="tablinks" onclick="switchTab(event, 'upload')">Upload</button>
             </div>
             <div style="height:calc(100% - 50px);overflow-y: auto;">
                 <div id="camera" class="tabcontent">
                     <input id="scanDocumentButton" type="button" value="Scan Documents" onclick="ScanDocuments();" />
                 </div>
-                <div id="save"  class="tabcontent">
+                <div id="save" class="tabcontent">
                     Default Filename: <input type="text" id="filename" value="DynamicWebTWAIN"/>
                     <input onclick="SaveWithFileDialog();" type="button" value="Save">
                     <div>
@@ -39,7 +40,10 @@
                         <label>
                             <input type="radio" value="pdf" name="ImageType" id="imgTypepdf" checked="checked" />PDF</label>
                     </div>
-                </div>                
+                </div>
+                <div id="upload" class="tabcontent">
+                    <input onclick="UploadAll();" type="button" value="Upload all as PDF">
+                </div>
            </div>
         </div>
     </div>
@@ -61,17 +65,7 @@
 
         function ScanDocuments() {
             if (DWObject) {
-                let cameraContainer = document.createElement("div");
-                cameraContainer.className = "fullscreen";
-                document.body.appendChild(cameraContainer);
-                function funcConfirmExit () {
-                    cameraContainer.remove();
-                    return true;
-                }
-                let scanOptions = {};
-                scanOptions.element = cameraContainer
-                scanOptions.scannerViewer = {funcConfirmExit: funcConfirmExit}
-                DWObject.Addon.Camera.scanDocument(scanOptions).then(
+                DWObject.Addon.Camera.scanDocument().then(
                     function(){
                         console.log("OK");
                     }, 
@@ -112,6 +106,90 @@
                         DWObject.SaveAllAsPDF(filename+".pdf", OnSuccess, OnFailure);
                 }
             }
+        }
+        
+        function UploadAll(){
+            if (DWObject) {
+                var indices = [];
+                for (var i=0;i<DWObject.HowManyImagesInBuffer;i++) {
+                    indices.push(i);
+                }
+                upload(indices,4); //4: pdf
+            }
+            
+            
+        }
+        
+        /**
+         * Upload the images specified by their indices in the specified file type.
+         * @param indices Specify the images
+         * @param type Specify the file type
+         */
+        function upload(indices, type) {
+            var protocol = Dynamsoft.Lib.detect.ssl ? "https://" : "http://",
+                port = window.location.port === "" ? 80 : window.location.port,
+                actionPage = "/Upload";
+            // path to the server-side script
+            var url = protocol + window.location.hostname + ":" + port + actionPage;
+            console.log(url);
+            var fileName = getFormattedDate() + getExtension(type);
+            if (DWObject) {
+                DWObject.HTTPUpload(
+                    url,
+                    indices,
+                    type,
+                    Dynamsoft.DWT.EnumDWT_UploadDataFormat.Binary,
+                    fileName,
+                    function() {
+                        console.log('Success');
+                    },
+                    function(errCode, errString, responseStr) {
+                        console.log(responseStr);
+                        var result = JSON.parse(responseStr);
+                        if (result.status === "success") {
+                            alert("Uploaded");
+                        }
+                    }
+                );
+            }
+        }
+        /**
+         * Return the extension string of the specified image type.
+         * @param type The image type (number).
+         */
+        function getExtension(type) {
+            switch (type) {
+                case 0:
+                    return ".bmp";
+                case 1:
+                    return ".jpg";
+                case 2:
+                 return ".tif";
+                case 3:
+                    return ".png";
+                case 4:
+                    return ".pdf";
+                case 7:
+                case 8:
+                default:
+                    return ".unknown";
+            }
+        }
+        
+        function getFormattedDate() {
+            var date = new Date();
+            var month = date.getMonth() + 1;
+            var day = date.getDate();
+            var hour = date.getHours();
+            var min = date.getMinutes();
+            var sec = date.getSeconds();
+            month = (month < 10 ? "0" : "") + month;
+            day = (day < 10 ? "0" : "") + day;
+            hour = (hour < 10 ? "0" : "") + hour;
+            min = (min < 10 ? "0" : "") + min;
+            sec = (sec < 10 ? "0" : "") + sec;
+            var str = date.getFullYear().toString() + month + day + hour + min + sec;
+            return str;
         }
     </script>
 </body>
