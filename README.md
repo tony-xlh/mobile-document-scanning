@@ -2,6 +2,7 @@
 
 This is a demo for Dynamic Web TWAIN, which is optimized for mobile devices.
 
+**Deprecation Note:** the document scanning via camera feature in Dynamic Web TWAIN has been separated as [Mobile Web Capture](https://www.dynamsoft.com/use-cases/mobile-web-capture-sdk/). Please use this instead.
 
 ## How to test it
 
