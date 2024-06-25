@@ -157,6 +157,31 @@
       height: 100%;
       display: none;
     }
+    
+    .card {
+      display: flex;
+      height: 150px;
+      margin: 20px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      align-items: center;
+    }
+
+    .card img {
+      height: 120px;
+      padding: 10px;
+      width: 100px;
+      object-fit: cover;
+    }
+
+    .card .doc-info {
+      height: 100%;
+    }
+
+    .doc-title {
+      padding: 20px 0;
+    }
+
   </style>
 </head>
 <body>
@@ -193,6 +218,7 @@
     let documentStore = localforage.createInstance({
       name: "documents"
     });
+    listScannedDocuments();
     window.onload = function(){
       document.getElementsByClassName("save-license-button")[0].addEventListener("click",function(){
         dcvLicense = document.getElementById("license").value;
@@ -551,6 +577,37 @@
         if(p) perspectiveViewer.show();
         if(e) editViewer.show();
       };
+    }
+
+    async function listScannedDocuments(){
+      const keys = await documentStore.keys();
+      const docs = document.getElementsByClassName("docs")[0];
+      docs.innerHTML = "";
+      for (let index = 0; index < keys.length; index++) {
+        const card = document.createElement("div");
+        card.className = "card";
+        const timestamp = keys[index];
+        const doc = await documentStore.getItem(timestamp);
+        const firstPage = doc.firstPage;
+        const blob = await arrayBufferToBlob(firstPage);
+        const url = URL.createObjectURL(blob);
+        const cover = document.createElement("img");
+        cover.src = url;
+        card.appendChild(cover);
+        const info = document.createElement("div");
+        info.className = "doc-info";
+        const title = document.createElement("div");
+        title.innerText = formattedDate(timestamp);
+        title.className = "doc-title";
+        info.appendChild(title);
+        card.appendChild(info);
+        docs.appendChild(card);
+      }
+    }
+
+    function formattedDate(timestamp){
+      let date = new Date(parseInt(timestamp));
+      return date.toLocaleString();
     }
 
     async function saveDocument(){
