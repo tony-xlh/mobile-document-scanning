@@ -9,6 +9,7 @@
   <script src="https://cdn.jsdelivr.net/npm/dynamsoft-capture-vision-router@2.0.30/dist/cvr.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/dynamsoft-document-viewer@1.1.0/dist/ddv.js"></script>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/dynamsoft-document-viewer@1.1.0/dist/ddv.css">
+  <script src="https://cdn.jsdelivr.net/npm/localforage@1.10.0/dist/localforage.min.js"></script>
   <style>
     .navbar {
       display: flex;
@@ -189,6 +190,9 @@
     let captureViewer;
     let perspectiveViewer;
     let editViewer;
+    let documentStore = localforage.createInstance({
+      name: "documents"
+    });
     window.onload = function(){
       document.getElementsByClassName("save-license-button")[0].addEventListener("click",function(){
         dcvLicense = document.getElementById("license").value;
