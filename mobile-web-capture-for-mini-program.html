@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Document Scanner</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" />
+  <style>
+    .navbar {
+      display: flex;
+      align-items: center;
+      height: 50px;
+      background: black;
+      width: 100%;
+    }
+
+    body {
+      margin: 0;
+    }
+
+    .fullwidth {
+      width: 100%;
+    }
+
+    .title {
+      margin-left: 8px;
+      text-decoration: none;
+      color: white;
+      font-family: sans-serif;
+      font-size: larger;
+      text-transform: uppercase;
+    }
+
+    .d-primary-btn {
+      display: inline-block;
+      background-color: #fe8e14;
+      color: #fff;
+      text-align: center;
+      cursor: pointer;
+      transition: ease-in .2s all;
+      font-family: "sans-serif"
+    }
+
+    .d-secondary-btn {
+      display: inline-block;
+      background-color: transparent;
+      color: #fe8e14;
+      text-align: center;
+      cursor: pointer;
+      font-family: "sans-serif"
+    }
+
+    @media(any-hover:hover){
+      .d-primary-btn:hover {
+        box-shadow: -4px 4px 0 0 #000;
+        transform: translate(4px,-4px);
+      }
+      .d-secondary-btn:hover {
+        color: #fea543;
+      }
+    }
+
+    .d-primary-btn:active {
+      color: #fea543;
+    }
+
+    .d-secondary-btn:active {
+      color: #fea543;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      overflow: auto;
+      height: 40px;
+      white-space: nowrap;
+    }
+
+    .actions .d-primary-btn {
+      padding: 5px 10px;
+      margin-right: 5px;
+    }
+
+    .ml-10 {
+      margin-left: 10px;
+    }
+
+    .modal {
+      display: flex;
+      align-items: flex-start;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      min-width: 250px;
+      min-height: 150px;
+      border: 1px solid gray;
+      border-radius: 5px;
+      background: white;
+      z-index: 9999;
+      padding: 10px;
+      visibility: hidden;
+    }
+
+    .input-modal.active {
+      visibility: inherit;
+    }
+
+    .input-modal input {
+      width: calc(100% - 10px);
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <a class="title" href="#">Document Scanner</a>
+  </nav>
+  <div class="container">
+  </div>
+  <div class="modal input-modal">
+    <div>
+      <div>
+        Please input your Mobile Web Capture's license (<a href="https://www.dynamsoft.com/customer/license/trialLicense" target="_blank">apply</a> or use the one-day trial):
+      </div>
+      <br/>
+      <label>
+        License:
+      </label>
+      <br/>
+      <input type="text" id="mwcLicense"/>
+      <br/>
+      <button id="saveLicenseBtn">Save</button>
+    </div>
+  </div>
+</body>
+</html>
