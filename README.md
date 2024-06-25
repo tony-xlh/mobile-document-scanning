@@ -1,19 +1,7 @@
-# Dynamic Web TWAIN
+## Mobile Document Scanning
 
-This is a demo for Dynamic Web TWAIN, which is optimized for mobile devices.
+Demos for [Mobile Web Capture](https://www.dynamsoft.com/use-cases/mobile-web-capture-sdk/).
 
-**Deprecation Note:** the document scanning via camera feature in Dynamic Web TWAIN has been separated as [Mobile Web Capture](https://www.dynamsoft.com/use-cases/mobile-web-capture-sdk/). Please use this instead.
+For old demos using [Dynamic Web TWAIN](https://www.dynamsoft.com/web-twain/overview/), check out the `dwt` branch.
 
-## How to test it
-
-1. Clone the project
-2. Download and install [Dynamic Web TWAIN](https://www.dynamsoft.com/web-twain/downloads/). Copy the `Resources` folder here.
-3. Run the https server: `$ python upload_server.py`. PS: You need to install Flask first: `pip install Flask`.
-4. Connect your phone to the same network with the server. View the result at `https://<ip-of-the-server>:8888/camera.html`
-
-More samples are available here: <https://github.com/xulihang/dynamsoft-samples/tree/main/dwt>
-
-Published blog:
-
-https://www.dynamsoft.com/codepool/mobile-document-scanning-in-html5.html
 
