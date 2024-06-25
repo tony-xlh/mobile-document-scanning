@@ -455,7 +455,13 @@
                           }
                       },
                       Dynamsoft.DDV.Elements.Pagination,
-                      Dynamsoft.DDV.Elements.Download,
+                      {
+                          type: Dynamsoft.DDV.Elements.Button,
+                          className: "ddv-button-download",
+                          events:{
+                              click: "download"
+                          }
+                      }
                   ],
               },
               Dynamsoft.DDV.Elements.MainView,
@@ -526,6 +532,10 @@
           switchViewer(0,1,0);
       });
 
+      editViewer.on("download",() => {
+        saveDocument();
+      });
+
       // Define a function to control the viewers' visibility
       const switchViewer = (c,p,e) => {
         captureViewer.hide();
@@ -541,6 +551,38 @@
         if(p) perspectiveViewer.show();
         if(e) editViewer.show();
       };
+    }
+
+    async function saveDocument(){
+      try {
+        let firstPage = await editViewer.currentDocument.saveToJpeg(0);
+        let pdf = await editViewer.currentDocument.saveToPdf();
+        firstPage = await blobToArrayBuffer(firstPage);
+        pdf = await blobToArrayBuffer(pdf);
+        let doc = {
+          pdf:pdf,
+          firstPage:firstPage
+        }
+        let timestamp = new Date().getTime().toString();
+        await documentStore.setItem(timestamp,doc);  
+      } catch (error) {
+        alert(error);
+      }
+    }
+
+    function arrayBufferToBlob(buffer,type){
+      return new Blob([buffer],{type:type});
+    }
+
+    function blobToArrayBuffer(blob){
+      return new Promise((resolve,reject)=>{
+        const reader = new FileReader;
+        reader.addEventListener("loadend",function(){
+          resolve(reader.result);
+        });
+        reader.addEventListener("error",reject);
+        reader.readAsArrayBuffer(blob);
+      });
     }
   </script>
 </body>
