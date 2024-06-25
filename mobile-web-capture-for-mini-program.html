@@ -167,6 +167,11 @@
       align-items: center;
     }
 
+    .card:hover {
+      box-shadow: 0 0 5px  orange;
+      cursor: pointer;
+    }
+
     .card img {
       height: 120px;
       padding: 10px;
@@ -227,12 +232,21 @@
         initMobileWebCapture();
       })
       document.getElementsByClassName("shutter-button")[0].addEventListener("click",function(){
-        document.getElementsByClassName("container")[0].style.display = "block";
+        toggleViewer(true);
         captureViewer.play({}).catch(err => {
           alert(err.message)
         });
       })
       showInputModal();
+    }
+
+    function toggleViewer(on){
+      let container = document.getElementsByClassName("container")[0];
+      if (on == true) {
+        container.style.display = "block";
+      }else{
+        container.style.display = "none";
+      }
     }
 
     function showInputModal(){
@@ -561,23 +575,23 @@
       editViewer.on("download",() => {
         saveDocument();
       });
-
-      // Define a function to control the viewers' visibility
-      const switchViewer = (c,p,e) => {
-        captureViewer.hide();
-        perspectiveViewer.hide();
-        editViewer.hide();
-
-        if(c) {
-          captureViewer.show();
-        } else {
-          captureViewer.stop();
-        }
-        
-        if(p) perspectiveViewer.show();
-        if(e) editViewer.show();
-      };
     }
+
+    // Define a function to control the viewers' visibility
+    function switchViewer(c,p,e) {
+      captureViewer.hide();
+      perspectiveViewer.hide();
+      editViewer.hide();
+
+      if(c) {
+        captureViewer.show();
+      } else {
+        captureViewer.stop();
+      }
+      
+      if(p) perspectiveViewer.show();
+      if(e) editViewer.show();
+    };
 
     async function listScannedDocuments(){
       const keys = await documentStore.keys();
@@ -594,6 +608,10 @@
         const cover = document.createElement("img");
         cover.src = url;
         card.appendChild(cover);
+        card.addEventListener("click",function(){
+          console.log("card clicked");
+          openDocument(doc);
+        })
         const info = document.createElement("div");
         info.className = "doc-info";
         const title = document.createElement("div");
@@ -603,6 +621,18 @@
         card.appendChild(info);
         docs.appendChild(card);
       }
+    }
+
+    async function openDocument(doc){
+      const document = Dynamsoft.DDV.documentManager.createDocument();
+      const pdfBlob = await arrayBufferToBlob(doc.pdf)
+      const source = {
+          fileData: pdfBlob
+      };
+      await document.loadSource(source);
+      editViewer.openDocument(document.uid);
+      toggleViewer(true);
+      switchViewer(0,0,1);
     }
 
     function formattedDate(timestamp){
