@@ -164,17 +164,47 @@
   <div class="modal input-modal">
     <div>
       <div>
-        Please input your Mobile Web Capture's license (<a href="https://www.dynamsoft.com/customer/license/trialLicense" target="_blank">apply</a> or use the one-day trial):
+        Please input your Mobile Web Capture's license (<a href="https://www.dynamsoft.com/customer/license/trialLicense/?product=mwc" target="_blank">apply</a> or use the one-day trial):
       </div>
       <br/>
       <label>
         License:
       </label>
       <br/>
-      <input type="text" id="mwcLicense"/>
+      <input type="text" id="license"/>
       <br/>
       <button id="saveLicenseBtn">Save</button>
     </div>
   </div>
+  <script>
+    let oneDayTrial = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
+    let license;
+    window.onload = function(){
+      document.getElementById("saveLicenseBtn").addEventListener("click",function(){
+        dcvLicense = document.getElementById("license").value;
+        localStorage.setItem("license",dcvLicense);
+        hideInputModal();
+        init();
+      })
+      showInputModal();
+    }
+
+    function showInputModal(){
+      let storedLicense = localStorage.getItem("license");
+      if (storedLicense) {
+        license = storedLicense;
+      }
+      document.getElementById("license").value = license ?? oneDayTrial;
+      document.getElementsByClassName("input-modal")[0].classList.add("active");
+    }
+
+    function hideInputModal(){
+      document.getElementsByClassName("input-modal")[0].classList.remove("active");
+    }
+
+    function init(){
+      
+    }
+  </script>
 </body>
 </html>
