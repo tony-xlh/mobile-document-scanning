@@ -777,7 +777,6 @@
       await document.loadSource(source);
       const blob = await document.saveToPdf();
       if (window.uni) {
-        alert("in mini program");
         uni.webView.getEnv(function(res) {
           console.log(JSON.stringify(res));
         });
