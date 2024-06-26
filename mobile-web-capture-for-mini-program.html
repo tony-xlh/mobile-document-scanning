@@ -216,6 +216,7 @@
   </div>
   <script>
     let oneDayTrial = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
+    let currentDocumentTimestamp;
     let license;
     let captureViewer;
     let perspectiveViewer;
@@ -232,6 +233,8 @@
         initMobileWebCapture();
       })
       document.getElementsByClassName("shutter-button")[0].addEventListener("click",function(){
+        currentDocumentTimestamp = undefined;
+        captureViewer.closeDocument();
         toggleViewer(true);
         captureViewer.play({}).catch(err => {
           alert(err.message)
@@ -610,6 +613,7 @@
         card.appendChild(cover);
         card.addEventListener("click",function(){
           console.log("card clicked");
+          currentDocumentTimestamp = timestamp;
           openDocument(doc);
         })
         const info = document.createElement("div");
@@ -650,7 +654,7 @@
           pdf:pdf,
           firstPage:firstPage
         }
-        let timestamp = new Date().getTime().toString();
+        let timestamp = currentDocumentTimestamp ?? new Date().getTime().toString();
         await documentStore.setItem(timestamp,doc);  
       } catch (error) {
         alert(error);
