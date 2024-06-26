@@ -215,6 +215,16 @@
     </div>
   </div>
   <script>
+    loadScripts();
+    function loadScripts(){
+      var userAgent = navigator.userAgent;
+      if (/miniProgram/i.test(userAgent) && /micromessenger/i.test(userAgent)) {
+        document.write('<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.4.0.js"><\/script>');
+        document.write('<script type="text/javascript" src="./uni.webview.1.5.5.js"><\/script>');
+      } 
+    }
+  </script>
+  <script>
     let oneDayTrial = "DLS2eyJoYW5kc2hha2VDb2RlIjoiMjAwMDAxLTE2NDk4Mjk3OTI2MzUiLCJvcmdhbml6YXRpb25JRCI6IjIwMDAwMSIsInNlc3Npb25QYXNzd29yZCI6IndTcGR6Vm05WDJrcEQ5YUoifQ==";
     let currentDocumentTimestamp;
     let license;
@@ -726,6 +736,17 @@
       });
     }
 
+    function blobToDataURL(blob) {
+      return new Promise((resolve,reject)=>{
+        var reader = new FileReader();
+        reader.readAsDataURL(blob);
+        reader.addEventListener("error",reject);
+        reader.onload = function (e) {
+          resolve(e.target.result);
+        }
+      })
+    }
+
     function closeDocumentViewer(){
       captureViewer.stop()
       toggleViewer(false);
@@ -740,7 +761,24 @@
       };
       await document.loadSource(source);
       const blob = await document.saveToPdf();
-      downloadBlob(blob);
+      if (uni) {
+        alert("in mini program");
+        uni.webView.getEnv(function(res) {
+          console.log(JSON.stringify(res));
+        });
+        const dataURL = await blobToDataURL(blob);
+        uni.postMessage({
+          data: {
+            action: 'message',
+            pdf: dataURL
+          }
+        });
+        uni.navigateBack({
+          delta: 1
+        });
+      }else{
+        downloadBlob(blob);
+      }
     }
 
     function downloadBlob(blob){
