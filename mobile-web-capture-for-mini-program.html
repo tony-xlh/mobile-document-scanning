@@ -655,7 +655,9 @@
           firstPage:firstPage
         }
         let timestamp = currentDocumentTimestamp ?? new Date().getTime().toString();
-        await documentStore.setItem(timestamp,doc);  
+        await documentStore.setItem(timestamp,doc);
+        toggleViewer(false);
+        listScannedDocuments();
       } catch (error) {
         alert(error);
       }
