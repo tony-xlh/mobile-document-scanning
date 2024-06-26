@@ -731,8 +731,26 @@
       toggleViewer(false);
     }
 
-    function saveAsPDF(doc){
-      
+    async function saveAsPDF(doc){
+      const docManager = Dynamsoft.DDV.documentManager;
+      const document = docManager.createDocument();
+      const pdfBlob = await arrayBufferToBlob(doc.pdf)
+      const source = {
+        fileData: pdfBlob
+      };
+      await document.loadSource(source);
+      const blob = await document.saveToPdf();
+      downloadBlob(blob);
+    }
+
+    function downloadBlob(blob){
+      const link = document.createElement('a')
+      link.href = URL.createObjectURL(blob);
+      link.download = "scanned.pdf";
+      document.body.appendChild(link)
+      link.click()
+      document.body.removeChild(link)
+      URL.revokeObjectURL(link.href);
     }
 
     async function deleteDocument(timestamp,card){
