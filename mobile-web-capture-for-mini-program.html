@@ -73,20 +73,6 @@
       color: #fea543;
     }
 
-    .actions {
-      display: flex;
-      justify-content: flex-start;
-      align-items: center;
-      overflow: auto;
-      height: 40px;
-      white-space: nowrap;
-    }
-
-    .actions .d-primary-btn {
-      padding: 5px 10px;
-      margin-right: 5px;
-    }
-
     .ml-10 {
       margin-left: 10px;
     }
@@ -164,7 +150,6 @@
       margin: 20px;
       border: 1px solid gray;
       border-radius: 5px;
-      align-items: center;
     }
 
     .card:hover {
@@ -177,10 +162,7 @@
       padding: 10px;
       width: 100px;
       object-fit: cover;
-    }
-
-    .card .doc-info {
-      height: 100%;
+      align-self: center;
     }
 
     .doc-title {
@@ -194,6 +176,15 @@
       left: 0;
       height: calc(100% - 95px);
       overflow: auto;
+    }
+
+    .docs .actions {
+      padding: 20px 0;
+    }
+
+    .actions .d-secondary-btn {
+      padding: 0 10px;
+      text-transform: uppercase;
     }
 
   </style>
@@ -653,10 +644,35 @@
         const title = document.createElement("div");
         title.innerText = formattedDate(timestamp);
         title.className = "doc-title";
+        const actions = document.createElement("div");
+        actions.className = "actions";
+        const saveAsPDFButton = secondaryButton("Save as PDF");
+        const deleteButton = secondaryButton("Delete");
+        saveAsPDFButton.addEventListener("click",function(e){
+          e.stopPropagation();
+          saveAsPDF(doc);
+        });
+        deleteButton.addEventListener("click",function(e){
+          e.stopPropagation();
+          deleteDocument(timestamp,index)
+        });
+        actions.appendChild(saveAsPDFButton);
+        actions.appendChild(deleteButton);
+        const span = document.createElement("div");
+        span.style.flex = 1;
         info.appendChild(title);
         card.appendChild(info);
+        card.appendChild(span);
+        card.appendChild(actions);
         docs.appendChild(card);
       }
+    }
+
+    function secondaryButton(text){
+      let btn = document.createElement("a");
+      btn.className = "d-secondary-btn";
+      btn.innerText = text;
+      return btn;
     }
 
     async function openDocument(doc){
@@ -713,6 +729,14 @@
     function closeDocumentViewer(){
       captureViewer.stop()
       toggleViewer(false);
+    }
+
+    function saveAsPDF(){
+
+    }
+
+    function deleteDocument(){
+
     }
   </script>
 </body>
