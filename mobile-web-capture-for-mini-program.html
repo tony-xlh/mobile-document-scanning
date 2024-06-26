@@ -517,9 +517,9 @@
                       Dynamsoft.DDV.Elements.Pagination,
                       {
                           type: Dynamsoft.DDV.Elements.Button,
-                          className: "ddv-button-download",
+                          className: "ddv-button-done",
                           events:{
-                              click: "download"
+                              click: "saveDocument"
                           }
                       }
                   ],
@@ -596,7 +596,7 @@
           switchViewer(0,1,0);
       });
 
-      editViewer.on("download",() => {
+      editViewer.on("saveDocument",() => {
         saveDocument();
       });
     }
