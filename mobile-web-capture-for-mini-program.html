@@ -654,7 +654,7 @@
         });
         deleteButton.addEventListener("click",function(e){
           e.stopPropagation();
-          deleteDocument(timestamp,index)
+          deleteDocument(timestamp,card)
         });
         actions.appendChild(saveAsPDFButton);
         actions.appendChild(deleteButton);
@@ -731,12 +731,13 @@
       toggleViewer(false);
     }
 
-    function saveAsPDF(){
-
+    function saveAsPDF(doc){
+      
     }
 
-    function deleteDocument(){
-
+    async function deleteDocument(timestamp,card){
+      await documentStore.removeItem(timestamp);
+      document.getElementsByClassName("docs")[0].removeChild(card);
     }
   </script>
 </body>
