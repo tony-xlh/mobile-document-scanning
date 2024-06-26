@@ -102,6 +102,18 @@
       width: calc(100% - 10px);
     }
 
+    .progress-modal {
+      align-items: center;
+      text-align: center;
+      justify-content: center;
+      min-height: 50px;
+      max-height: 100px;
+    }
+
+    .progress-modal.active {
+      visibility: inherit;
+    }
+
     .footer {
       display: flex;
       justify-content: center;
@@ -214,6 +226,7 @@
       <button class="save-license-button">Save</button>
     </div>
   </div>
+  <div class="modal progress-modal"></div>
   <script>
     loadScripts();
     function loadScripts(){
@@ -278,6 +291,7 @@
 
 
     async function initMobileWebCapture(){
+      showProgress("Loading...");
       Dynamsoft.Core.CoreModule.loadWasm(["DDN"]);
       Dynamsoft.DDV.Core.loadWasm();
 
@@ -611,6 +625,7 @@
       editViewer.on("close",() => {
         closeDocumentViewer();
       });
+      hideProgress();
     }
 
     // Define a function to control the viewers' visibility
@@ -794,6 +809,15 @@
     async function deleteDocument(timestamp,card){
       await documentStore.removeItem(timestamp);
       document.getElementsByClassName("docs")[0].removeChild(card);
+    }
+
+    function showProgress(info){
+      document.getElementsByClassName("progress-modal")[0].classList.add("active");
+      document.getElementsByClassName("progress-modal")[0].innerText = info;
+    }
+
+    function hideProgress(){
+      document.getElementsByClassName("progress-modal")[0].classList.remove("active");
     }
   </script>
 </body>
