@@ -418,6 +418,13 @@
                           className: "ddv-capture-viewer-resolution",
                       },
                       Dynamsoft.DDV.Elements.Flashlight,
+                      {
+                          type: "Close",
+                          className: "ddv-button-close",
+                          events:{ 
+                              click: "close"
+                          }
+                      }
                   ],
               },
               Dynamsoft.DDV.Elements.MainView,
@@ -546,6 +553,10 @@
       // Register an event in `captureViewer` to show the perspective viewer
       captureViewer.on("showPerspectiveViewer",() => {
           switchViewer(0,1,0);
+      });
+
+      captureViewer.on("close",() => {
+        closeDocumentViewer();
       });
 
       // Create a perspective viewer
@@ -686,6 +697,11 @@
         reader.addEventListener("error",reject);
         reader.readAsArrayBuffer(blob);
       });
+    }
+
+    function closeDocumentViewer(){
+      captureViewer.stop()
+      toggleViewer(false);
     }
   </script>
 </body>
