@@ -257,9 +257,10 @@
       })
       document.getElementsByClassName("shutter-button")[0].addEventListener("click",function(){
         currentDocumentTimestamp = undefined;
-        captureViewer.closeDocument();
-        switchViewer(1,0,0);
         toggleViewer(true);
+        switchViewer(1,0,0);
+        const document = Dynamsoft.DDV.documentManager.createDocument();
+        captureViewer.openDocument(document.uid);
         captureViewer.play({}).catch(err => {
           alert(err.message)
         });
