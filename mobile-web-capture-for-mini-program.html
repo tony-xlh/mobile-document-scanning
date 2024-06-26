@@ -517,6 +517,13 @@
                       Dynamsoft.DDV.Elements.Pagination,
                       {
                           type: Dynamsoft.DDV.Elements.Button,
+                          className: "ddv-button-close",
+                          events:{
+                              click: "close"
+                          }
+                      },
+                      {
+                          type: Dynamsoft.DDV.Elements.Button,
                           className: "ddv-button-done",
                           events:{
                               click: "saveDocument"
@@ -593,11 +600,15 @@
 
       // Register an event in `editViewer` to go back the perspective viewer
       editViewer.on("backToPerspectiveViewer",() => {
-          switchViewer(0,1,0);
+        switchViewer(0,1,0);
       });
 
       editViewer.on("saveDocument",() => {
         saveDocument();
+      });
+
+      editViewer.on("close",() => {
+        closeDocumentViewer();
       });
     }
 
